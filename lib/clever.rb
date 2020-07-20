@@ -29,6 +29,7 @@ module Clever
   TEACHERS_ENDPOINT = '/v2.0/teachers'
   EVENTS_ENDPOINT   = '/v1.2/events'
   TERMS_ENDPOINT    = '/v2.0/terms'
+  DISTRICT_ENDPOINT = '/v2.1/districts'
   GRADES_ENDPOINT   = 'https://grades-api.beta.clever.com/v1/grade'
 
   class DistrictNotFound < StandardError; end
