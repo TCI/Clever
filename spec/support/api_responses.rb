@@ -158,7 +158,7 @@ RSpec.shared_context 'api responses' do
         'name' => 'Science Grade 1',
         'period' => '06',
         'grade' => '1',
-        'subject' => 'social studies',
+        'subject' => '',
         'course' => '1000',
         'teachers' => ['6'],
         'students' => %w(1 2 3),

@@ -8,7 +8,7 @@ module Clever
                   :period,
                   :course_number,
                   :grades,
-                  :subject,
+                  :subjects,
                   :provider,
                   :term_name,
                   :term_start_date,
@@ -20,7 +20,7 @@ module Clever
         @period          = attributes['period']
         @course_number   = attributes['course_number']
         @grades          = attributes['grades']
-        @subject         = attributes['subject']
+        @subjects        = attributes['subjects']
         @term_name       = attributes['term_name']
         @term_start_date = attributes['term_start_date']
         @term_end_date   = attributes['term_end_date']
