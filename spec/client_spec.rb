@@ -396,6 +396,7 @@ RSpec.describe Clever::Client do
         expect(first_classroom.period).to eq(section_1['data']['period'])
         expect(first_classroom.course_number).to eq(course_1['data']['number'])
         expect(first_classroom.grades).to eq(section_1['data']['grade'])
+        expect(first_classroom.subject).to eq(section_1['data']['subject'])
         expect(first_classroom.term_name).to eq('term name')
         expect(first_classroom.term_start_date).to eq('2019-08-21')
         expect(first_classroom.term_end_date).to eq('2020-01-10')
@@ -407,6 +408,7 @@ RSpec.describe Clever::Client do
         expect(second_classroom.period).to eq(section_2['data']['period'])
         expect(second_classroom.course_number).to eq(nil)
         expect(second_classroom.grades).to eq(section_2['data']['grade'])
+        expect(second_classroom.subject).to eq(section_2['data']['subject'])
         expect(second_classroom.provider).to eq('clever')
       end
     end
