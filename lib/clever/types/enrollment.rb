@@ -5,12 +5,14 @@ module Clever
     class Enrollment < Base
       attr_reader :classroom_uid,
                   :user_uid,
-                  :provider
+                  :provider,
+                  :primary_teacher
 
       def initialize(attributes = {})
-        @classroom_uid = attributes['classroom_uid']
-        @user_uid      = attributes['user_uid']
-        @provider      = 'clever'
+        @classroom_uid   = attributes['classroom_uid']
+        @user_uid        = attributes['user_uid']
+        @provider        = 'clever'
+        @primary_teacher = attributes.dig('primary_teacher') || false
       end
     end
   end
