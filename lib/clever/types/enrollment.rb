@@ -6,13 +6,13 @@ module Clever
       attr_reader :classroom_uid,
                   :user_uid,
                   :provider,
-                  :primary_teacher
+                  :primary
 
       def initialize(attributes = {})
         @classroom_uid   = attributes['classroom_uid']
         @user_uid        = attributes['user_uid']
         @provider        = 'clever'
-        @primary_teacher = attributes.dig('primary_teacher') || false
+        @primary         = attributes.dig('primary') || false
       end
     end
   end

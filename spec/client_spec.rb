@@ -431,12 +431,12 @@ RSpec.describe Clever::Client do
 
           student_enrollments = response[:student].each_with_object({}) do |enrollment, enrollments|
             enrollments[enrollment.classroom_uid] ||= []
-            enrollments[enrollment.classroom_uid] << [enrollment.user_uid, enrollment.primary_teacher]
+            enrollments[enrollment.classroom_uid] << [enrollment.user_uid, enrollment.primary]
           end
 
           teacher_enrollments = response[:teacher].each_with_object({}) do |enrollment, enrollments|
             enrollments[enrollment.classroom_uid] ||= []
-            enrollments[enrollment.classroom_uid] << [enrollment.user_uid, enrollment.primary_teacher]
+            enrollments[enrollment.classroom_uid] << [enrollment.user_uid, enrollment.primary]
           end
 
           expect(student_enrollments['5']).to contain_exactly(['6', false], ['7', false], ['8', false])

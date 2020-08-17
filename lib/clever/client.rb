@@ -137,7 +137,7 @@ module Clever
         enrollments[:teacher] << Types::Enrollment.new(
           'classroom_uid' => section.uid,
           'user_uid' => teacher_uid,
-          'primary_teacher' => section.primary_teacher_uid == teacher_uid
+          'primary' => section.primary_teacher_uid == teacher_uid
         )
       end
     end
