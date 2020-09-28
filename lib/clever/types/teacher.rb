@@ -52,10 +52,6 @@ module Clever
       def blank?(field)
         field.nil? || field == ''
       end
-
-      def default_username
-        presence(@district_username) || presence(@email) || @sis_id
-      end
     end
   end
 end
