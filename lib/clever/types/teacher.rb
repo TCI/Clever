@@ -26,6 +26,17 @@ module Clever
         @username ||= presence(username_from(username_source))
       end
 
+      def to_h
+        {
+          uid: @uid,
+          email: @email,
+          first_name: @first_name,
+          last_name: @last_name,
+          username: @username,
+          provider: @provider
+        }
+      end
+
       private
 
       def username_from(username_source)
@@ -40,6 +51,10 @@ module Clever
 
       def blank?(field)
         field.nil? || field == ''
+      end
+
+      def default_username
+        presence(@district_username) || presence(@email) || @sis_id
       end
     end
   end
