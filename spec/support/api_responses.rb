@@ -11,10 +11,11 @@ RSpec.shared_context 'api responses' do
 
   let(:client) do
     Clever::Client.configure do |config|
-      config.app_id          = app_id
-      config.vendor_key      = vendor_key
-      config.vendor_secret   = vendor_secret
-      config.username_source = username_source
+      config.app_id                = app_id
+      config.vendor_key            = vendor_key
+      config.vendor_secret         = vendor_secret
+      config.username_source       = username_source
+      config.staff_username_source = staff_username_source
     end
   end
 

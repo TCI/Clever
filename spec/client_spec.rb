@@ -284,6 +284,23 @@ RSpec.describe Clever::Client do
         end
       end
 
+      context 'with username source' do
+        context 'district_username' do
+          let(:staff_username_source) { 'district_username' }
+
+          it 'returns the proper usernames' do
+            response = client.teachers
+
+            expect(response.length).to eq(2)
+
+            first_teacher  = response[0]
+            second_teacher = response[1]
+
+            expect(first_teacher.username).to eq(teacher_1['data']['credentials']['district_username'])
+            expect(second_teacher.username).to be_nil
+          end
+        end
+      end
     end
 
     describe 'courses' do
@@ -380,6 +397,9 @@ RSpec.describe Clever::Client do
         client.connection.expects(:execute)
           .with(Clever::COURSES_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
           .returns(courses_response)
+        client.connection.expects(:execute)
+          .with(Clever::TERMS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
+          .returns(terms_response)
         client.connection.expects(:execute)
           .with(Clever::SECTIONS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
           .returns(sections_response)
@@ -560,10 +580,13 @@ RSpec.describe Clever::Client do
         teacher = Clever::Types::Teacher.new(teacher_1['data'])
         expect(teacher.to_h).to eq(
           uid: teacher_1['data']['id'],
+          district_username: teacher_1['data']['credentials']['district_username'],
+          username: nil, # username is nil because there is no client
           email: teacher_1['data']['email'],
           first_name: teacher_1['data']['name']['first'],
           last_name: teacher_1['data']['name']['last'],
-          provider: 'clever'
+          provider: 'clever',
+          sis_id: nil,
         )
       end
     end
