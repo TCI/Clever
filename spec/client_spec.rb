@@ -254,6 +254,7 @@ RSpec.describe Clever::Client do
           expect(first_teacher.email).to eq(teacher_1['data']['email'])
           expect(first_teacher.first_name).to eq(teacher_1['data']['name']['first'])
           expect(first_teacher.last_name).to eq(teacher_1['data']['name']['last'])
+          expect(first_teacher.username).to eq(teacher_1['data']['credentials']['district_username'])
           expect(first_teacher.provider).to eq('clever')
 
           expect(second_teacher.class).to eq(Clever::Types::Teacher)

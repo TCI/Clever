@@ -7,6 +7,7 @@ RSpec.shared_context 'api responses' do
   let(:app_id) { '5800e1c5e16c4230146fce0' }
   let(:status) { 200 }
   let(:username_source) { nil }
+  let(:staff_username_source) { 'district_username' }
 
   let(:client) do
     Clever::Client.configure do |config|
@@ -104,7 +105,8 @@ RSpec.shared_context 'api responses' do
       'data' => {
         'id' => '1',
         'email' => '12345',
-        'name' => { 'first' => 'jill', 'last' => 'epstein' }
+        'name' => { 'first' => 'jill', 'last' => 'epstein' },
+        'credentials' => { 'district_username' => 'epstein.jill' }
       }
     }
   end
