@@ -321,7 +321,7 @@ RSpec.describe Clever::Client do
           .returns(sections_response)
       end
 
-      it 'authenticates and returns teachers' do
+      it 'authenticates and returns sections' do
         response = client.sections
         expect(client.app_token).to eq(app_token)
 
@@ -331,22 +331,26 @@ RSpec.describe Clever::Client do
         expect(first_section.class).to eq(Clever::Types::Section)
         expect(first_section.uid).to eq(section_1['data']['id'])
         expect(first_section.name).to eq(section_1['data']['name'])
-        expect(first_section.grades).to eq(section_1['data']['grade'])
+        expect(first_section.grades).to eq([section_1['data']['grade']])
         expect(first_section.period).to eq(section_1['data']['period'])
         expect(first_section.course).to eq(section_1['data']['course'])
+        expect(first_section.subjects).to eq([section_1['data']['subject']])
         expect(first_section.teachers).to eq(section_1['data']['teachers'])
         expect(first_section.students).to eq(section_1['data']['students'])
         expect(first_section.provider).to eq('clever')
+        expect(first_section.primary_teacher_uid).to eq(section_1['data']['teacher'])
 
         expect(second_section.class).to eq(Clever::Types::Section)
         expect(second_section.uid).to eq(section_2['data']['id'])
         expect(second_section.name).to eq(section_2['data']['name'])
-        expect(second_section.grades).to eq(section_2['data']['grade'])
+        expect(second_section.grades).to eq([section_2['data']['grade']])
         expect(second_section.period).to eq(section_2['data']['period'])
         expect(second_section.course).to eq(section_2['data']['course'])
+        expect(second_section.subjects).to eq([])
         expect(second_section.teachers).to eq(section_2['data']['teachers'])
         expect(second_section.students).to eq(section_2['data']['students'])
         expect(second_section.provider).to eq('clever')
+        expect(second_section.primary_teacher_uid).to eq(section_2['data']['teacher'])
       end
     end
 
@@ -377,9 +381,6 @@ RSpec.describe Clever::Client do
           .with(Clever::COURSES_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
           .returns(courses_response)
         client.connection.expects(:execute)
-          .with(Clever::TERMS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
-          .returns(terms_response)
-        client.connection.expects(:execute)
           .with(Clever::SECTIONS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
           .returns(sections_response)
       end
@@ -396,7 +397,8 @@ RSpec.describe Clever::Client do
         expect(first_classroom.name).to eq(section_1['data']['name'])
         expect(first_classroom.period).to eq(section_1['data']['period'])
         expect(first_classroom.course_number).to eq(course_1['data']['number'])
-        expect(first_classroom.grades).to eq(section_1['data']['grade'])
+        expect(first_classroom.grades).to eq([section_1['data']['grade']])
+        expect(first_classroom.subjects).to eq([section_1['data']['subject']])
         expect(first_classroom.term_name).to eq('term name')
         expect(first_classroom.term_start_date).to eq('2019-08-21')
         expect(first_classroom.term_end_date).to eq('2020-01-10')
@@ -407,7 +409,8 @@ RSpec.describe Clever::Client do
         expect(second_classroom.name).to eq(section_2['data']['name'])
         expect(second_classroom.period).to eq(section_2['data']['period'])
         expect(second_classroom.course_number).to eq(nil)
-        expect(second_classroom.grades).to eq(section_2['data']['grade'])
+        expect(second_classroom.grades).to eq([section_2['data']['grade']])
+        expect(second_classroom.subjects).to eq([])
         expect(second_classroom.provider).to eq('clever')
       end
     end
@@ -426,19 +429,19 @@ RSpec.describe Clever::Client do
 
           student_enrollments = response[:student].each_with_object({}) do |enrollment, enrollments|
             enrollments[enrollment.classroom_uid] ||= []
-            enrollments[enrollment.classroom_uid] << enrollment.user_uid
+            enrollments[enrollment.classroom_uid] << [enrollment.user_uid, enrollment.primary]
           end
 
           teacher_enrollments = response[:teacher].each_with_object({}) do |enrollment, enrollments|
             enrollments[enrollment.classroom_uid] ||= []
-            enrollments[enrollment.classroom_uid] << enrollment.user_uid
+            enrollments[enrollment.classroom_uid] << [enrollment.user_uid, enrollment.primary]
           end
 
-          expect(student_enrollments['5']).to eq(%w(6 7 8))
-          expect(student_enrollments['20']).to eq(%w(1 2 3))
+          expect(student_enrollments['5']).to contain_exactly(['6', false], ['7', false], ['8', false])
+          expect(student_enrollments['20']).to contain_exactly(['1', false], ['2', false], ['3', false])
 
-          expect(teacher_enrollments['5']).to eq(%w(5 2))
-          expect(teacher_enrollments['20']).to eq(['6'])
+          expect(teacher_enrollments['5']).to contain_exactly(['5', false], ['2', true])
+          expect(teacher_enrollments['20']).to contain_exactly(['6', true])
         end
       end
 
