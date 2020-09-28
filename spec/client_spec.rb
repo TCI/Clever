@@ -254,7 +254,6 @@ RSpec.describe Clever::Client do
           expect(first_teacher.email).to eq(teacher_1['data']['email'])
           expect(first_teacher.first_name).to eq(teacher_1['data']['name']['first'])
           expect(first_teacher.last_name).to eq(teacher_1['data']['name']['last'])
-          expect(first_teacher.username).to eq(teacher_1['data']['credentials']['district_username'])
           expect(first_teacher.provider).to eq('clever')
 
           expect(second_teacher.class).to eq(Clever::Types::Teacher)
@@ -298,6 +297,38 @@ RSpec.describe Clever::Client do
 
             expect(first_teacher.username).to eq(teacher_1['data']['credentials']['district_username'])
             expect(second_teacher.username).to be_nil
+          end
+        end
+
+        context 'district_username' do
+          let(:staff_username_source) { 'email' }
+
+          it 'returns the proper usernames' do
+            response = client.teachers
+
+            expect(response.length).to eq(2)
+
+            first_teacher  = response[0]
+            second_teacher = response[1]
+
+            expect(first_teacher.username).to eq(teacher_1['data']['email'])
+            expect(second_teacher.username).to eq(teacher_2['data']['email'])
+          end
+        end
+
+        context 'district_username' do
+          let(:staff_username_source) { 'sis_id' }
+
+          it 'returns the proper usernames' do
+            response = client.teachers
+
+            expect(response.length).to eq(2)
+
+            first_teacher  = response[0]
+            second_teacher = response[1]
+
+            expect(first_teacher.username).to eq(teacher_1['data']['sis_id'])
+            expect(second_teacher.username).to eq(teacher_2['data']['sis_id'])
           end
         end
       end
