@@ -112,6 +112,16 @@ module Clever
       @connection.execute(GRADES_ENDPOINT, :post, nil, request_body)
     end
 
+    def district_exists?(uid)
+      begin
+        authenticate
+      rescue Clever::DistrictNotFound
+        return false
+      end
+
+      !!@connection.execute(DISTRICT_ENDPOINT, :get, id: uid)
+    end
+
     private
 
     def parse_enrollments(classroom_uids, sections)
