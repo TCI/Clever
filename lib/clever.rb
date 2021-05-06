@@ -26,7 +26,7 @@ module Clever
   STUDENTS_ENDPOINT = '/v3.0/users?role=student'
   COURSES_ENDPOINT  = '/v3.0/courses'
   SECTIONS_ENDPOINT = '/v3.0/sections'
-  TEACHERS_ENDPOINT = '/v3.0/users?role=teacher'
+  TEACHERS_ENDPOINT = '/v3.0/users'
   EVENTS_ENDPOINT   = '/v1.2/events'
   TERMS_ENDPOINT    = '/v3.0/terms'
   GRADES_ENDPOINT   = 'https://grades-api.beta.clever.com/v1/grade'

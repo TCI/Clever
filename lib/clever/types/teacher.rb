@@ -15,7 +15,7 @@ module Clever
         @email             = attributes['email']
         @first_name        = attributes['name']['first']
         @last_name         = attributes['name']['last']
-        @legacy_id         = attributes['roles']['teacher']['legacy_id']
+        @legacy_id         = attributes.dig('roles', 'teacher', 'legacy_id')
         @provider          = 'clever'
         @sis_id            = attributes['sis_id']
         @uid               = attributes['id']
