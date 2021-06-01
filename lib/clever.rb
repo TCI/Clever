@@ -17,6 +17,7 @@ require 'clever/types/event'
 require 'clever/types/student'
 require 'clever/types/section'
 require 'clever/types/teacher'
+require 'clever/types/admin'
 require 'clever/types/term'
 require 'clever/types/token'
 
