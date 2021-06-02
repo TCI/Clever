@@ -342,10 +342,6 @@ RSpec.describe Clever::Client do
         client.connection.expects(:execute)
           .with(Clever::TEACHERS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
           .returns(teachers_response)
-
-        client.connection.expects(:execute)
-          .with(Clever::ADMINS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
-          .returns(admins_response)
       end
 
       context 'without uids passed in' do
@@ -353,10 +349,10 @@ RSpec.describe Clever::Client do
           response = client.teachers
           expect(client.app_token).to eq(app_token)
 
-          expect(response.length).to eq(4)
+          expect(response.length).to eq(2)
 
-          first_teacher  = response.select { |object| object.role == 'teacher' }[0]
-          second_teacher = response.select { |object| object.role == 'teacher' }[1]
+          first_teacher  = response[0]
+          second_teacher = response[1]
 
           expect(first_teacher.class).to eq(Clever::Types::Teacher)
           expect(first_teacher.uid).to eq(teacher_1['data']['id'])
@@ -402,10 +398,10 @@ RSpec.describe Clever::Client do
           it 'returns the proper usernames' do
             response = client.teachers
 
-            expect(response.length).to eq(4)
+            expect(response.length).to eq(2)
 
-            first_teacher  = response.select { |object| object.role == 'teacher' }[0]
-            second_teacher = response.select { |object| object.role == 'teacher' }[1]
+            first_teacher  = response[0]
+            second_teacher = response[1]
 
             expect(first_teacher.username).to eq(teacher_1['data']['roles']['teacher']['credentials']['district_username'])
             expect(second_teacher.username).to be_nil
@@ -418,10 +414,10 @@ RSpec.describe Clever::Client do
           it 'returns the proper usernames' do
             response = client.teachers
 
-            expect(response.length).to eq(4)
+            expect(response.length).to eq(2)
 
-            first_teacher  = response.select { |object| object.role == 'teacher' }[0]
-            second_teacher = response.select { |object| object.role == 'teacher' }[1]
+            first_teacher  = response[0]
+            second_teacher = response[1]
 
             expect(first_teacher.username).to eq(teacher_1['data']['email'])
             expect(second_teacher.username).to eq(teacher_2['data']['email'])
@@ -434,10 +430,10 @@ RSpec.describe Clever::Client do
           it 'returns the proper usernames' do
             response = client.teachers
 
-            expect(response.length).to eq(4)
+            expect(response.length).to eq(2)
 
-            first_teacher  = response.select { |object| object.role == 'teacher' }[0]
-            second_teacher = response.select { |object| object.role == 'teacher' }[1]
+            first_teacher  = response[0]
+            second_teacher = response[1]
 
             expect(first_teacher.username).to eq(teacher_1['data']['sis_id'])
             expect(second_teacher.username).to eq(teacher_2['data']['sis_id'])
