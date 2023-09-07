@@ -9,7 +9,7 @@ module Clever
                   :provider
 
       def initialize(attributes = {}, client: nil)
-        @district_username = attributes.dig('credentials', 'district_username')
+        @district_username = attributes.dig('roles', 'student', 'credentials', 'district_username')
         @email             = attributes['email']
         @first_name        = attributes['name']['first']
         @last_name         = attributes['name']['last']
