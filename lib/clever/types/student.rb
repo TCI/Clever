@@ -8,7 +8,7 @@ module Clever
                   :last_name,
                   :provider
 
-      def initialize(attributes = {}, client: nil)
+      def initialize(attributes = {}, options)
         @district_username = attributes.dig('roles', 'student', 'credentials', 'district_username')
         @email             = attributes['email']
         @first_name        = attributes['name']['first']
@@ -16,7 +16,7 @@ module Clever
         @provider          = 'clever'
         @sis_id            = attributes.dig('roles', 'student', 'sis_id')
         @uid               = attributes['id']
-        @username          = username(client)
+        @username          = username(options[:client])
       end
 
       def username(client = nil)
