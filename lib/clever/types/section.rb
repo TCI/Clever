@@ -24,7 +24,7 @@ module Clever
         @subjects            = [presence(attributes['subject'])].compact
         @students            = attributes['students']
         @teachers            = attributes['teachers']
-        @term_id             =  attributes['term_id']
+        @term_id             = attributes['term_id']
         @provider            = 'clever'
         @primary_teacher_uid = attributes['teacher']
       end
