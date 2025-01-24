@@ -103,17 +103,27 @@ module Clever
       admins.select { |record| record_uids_set.include?(record.uid) }
     end
 
+    def schools
+      authenticate
+
+      Paginator.fetch(connection, Clever::SCHOOLS_ENDPOINT,
+                      :get, Types::School, client: self).force
+    end
+
     # discard params to make the API behave the same as the one roster gem
     def classrooms(*)
       authenticate
 
       fetched_courses = courses
+      fetched_schools = schools
 
       terms_hash = terms.each_with_object({}) { |term, terms| terms[term.uid] = term  }
 
       sections.map do |section|
         course = fetched_courses.find { |clever_course| clever_course.uid == section.course }
         term = terms_hash[section.term_id]
+        school = fetched_schools.find { |school| school.uid == section.school_uid }
+
         Types::Classroom.new(
           'id' => section.uid,
           'name' => section.name,
@@ -124,7 +134,9 @@ module Clever
           'term_name' => term&.name,
           'term_start_date' => term&.start_date,
           'term_end_date' => term&.end_date,
-          'term_id' => section.term_id
+          'term_id' => section.term_id,
+          'school_name' => school&.name,
+          'school_uid' => school&.uid
         )
       end
     end

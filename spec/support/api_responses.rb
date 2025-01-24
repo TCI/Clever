@@ -50,9 +50,8 @@ RSpec.shared_context 'api responses' do
       'data' => {
         'id' => '17b6cc35f',
         'name' => { 'first' => 'jane', 'last' => 'doe' },
-        'credentials' => { 'district_username' => '' },
         'grade' => '1',
-        'roles' => { 'student' => { 'sis_id' => '121314' } },
+        'roles' => { 'student' => { 'sis_id' => '121314' }, 'credentials' => { 'district_username' => '' } },
         'email' => ''
       }
     }
@@ -63,9 +62,8 @@ RSpec.shared_context 'api responses' do
       'data' => {
         'id' => '5b1f7442',
         'name' => { 'first' => 'johnny', 'last' => 'appleseed' },
-        'credentials' => { 'district_username' => '' },
         'grade' => '6',
-        'roles' => { 'student' => { 'sis_id' => '213154' } },
+        'roles' => { 'student' => { 'sis_id' => '213154', 'credentials' => { 'district_username' => '' } } },
         'email' => 'jseed@school.com'
       }
     }
@@ -76,9 +74,8 @@ RSpec.shared_context 'api responses' do
       'data' => {
         'id' => '4521ffc9',
         'name' => { 'first' => 'thomas', 'last' => 'tank' },
-        'credentials' => { 'district_username' => 'tomtank' },
         'grade' => '5',
-        'roles' => { 'student' => { 'sis_id' => '' } },
+        'roles' => { 'student' => { 'sis_id' => '', 'credentials' => { 'district_username' => 'tomtank' } } },
         'email' => 'choochoo@school.com'
       }
     }
@@ -211,7 +208,8 @@ RSpec.shared_context 'api responses' do
         'teachers' => %w(5 2),
         'students' => %w(6 7 8),
         'term_id' => '1',
-        'teacher' => '2'
+        'teacher' => '2',
+        'school'  => '5'
       }
     }
   end
@@ -227,7 +225,8 @@ RSpec.shared_context 'api responses' do
         'teachers' => ['6'],
         'students' => %w(1 2 3),
         'term_id' => '1',
-        'teacher' => '6'
+        'teacher' => '6',
+        'school'  => '6'
       }
     }
   end
@@ -242,13 +241,46 @@ RSpec.shared_context 'api responses' do
         'teachers' => ['6'],
         'students' => %w(1 2 3),
         'term_id' => '1',
-        'teacher' => '6'
+        'teacher' => '6',
+        'school'  => '7'
       }
     }
   end
 
   let(:sections_body) { { 'data' => [section_1, section_2] } }
   let(:sections_response) { Clever::Response.new(stub(body: sections_body, status: status)) }
+
+  #################################### SCHOOLS RESPONSE ####################################
+  let(:school_1) do
+    {
+      'data' => {
+        'id' => '5',
+        'name' => 'Walkertown Elementary School',
+        'number' => '5'
+      }
+    }
+  end
+  let(:school_2) do
+    {
+      'data' => {
+        'id' => '6',
+        'name' => 'Wagstaff School',
+        'number' => '20'
+      }
+    }
+  end
+  let(:school_3) do
+    {
+      'data' => {
+        'id' => '7',
+        'name' => 'Hawkins Middle School',
+        'number' => '11'
+      }
+    }
+  end
+
+  let(:schools_body) { { 'data' => [school_1, school_2] } }
+  let(:schools_response) { Clever::Response.new(stub(body: schools_body, status: status)) }
 
   ################################### PAGINATION RESPONSE ###################################
   let(:page_2_uri) { 'sections/page_2' }

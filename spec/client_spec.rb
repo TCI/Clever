@@ -191,7 +191,7 @@ RSpec.describe Clever::Client do
           expect(third_student.uid).to eq(student_3['data']['id'])
           expect(third_student.first_name).to eq(student_3['data']['name']['first'])
           expect(third_student.last_name).to eq(student_3['data']['name']['last'])
-          expect(third_student.username).to eq(student_3['data']['credentials']['district_username'])
+          expect(third_student.username).to eq(student_3['data']['roles']['student']['credentials']['district_username'])
           expect(third_student.provider).to eq('clever')
         end
       end
@@ -227,7 +227,7 @@ RSpec.describe Clever::Client do
 
             expect(first_student.username).to eq(student_1['data']['roles']['student']['sis_id'])
             expect(second_student.username).to eq(student_2['data']['email'])
-            expect(third_student.username).to eq(student_3['data']['credentials']['district_username'])
+            expect(third_student.username).to eq(student_3['data']['roles']['student']['credentials']['district_username'])
           end
         end
 
@@ -261,7 +261,7 @@ RSpec.describe Clever::Client do
 
             expect(first_student.username).to eq(student_1['data']['roles']['student']['sis_id'])
             expect(second_student.username).to eq(student_2['data']['roles']['student']['sis_id'])
-            expect(third_student.username).to eq(student_3['data']['credentials']['district_username'])
+            expect(third_student.username).to eq(student_3['data']['roles']['student']['credentials']['district_username'])
           end
         end
       end
@@ -532,6 +532,7 @@ RSpec.describe Clever::Client do
         expect(first_section.subjects).to eq([section_1['data']['subject']])
         expect(first_section.teachers).to eq(section_1['data']['teachers'])
         expect(first_section.students).to eq(section_1['data']['students'])
+        expect(first_section.school_uid).to eq(school_1['data']['id'])
         expect(first_section.provider).to eq('clever')
         expect(first_section.primary_teacher_uid).to eq(section_1['data']['teacher'])
 
@@ -544,6 +545,7 @@ RSpec.describe Clever::Client do
         expect(second_section.subjects).to eq([])
         expect(second_section.teachers).to eq(section_2['data']['teachers'])
         expect(second_section.students).to eq(section_2['data']['students'])
+        expect(second_section.school_uid).to eq(school_2['data']['id'])
         expect(second_section.provider).to eq('clever')
         expect(second_section.primary_teacher_uid).to eq(section_2['data']['teacher'])
       end
@@ -581,6 +583,9 @@ RSpec.describe Clever::Client do
         client.connection.expects(:execute)
           .with(Clever::SECTIONS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
           .returns(sections_response)
+        client.connection.expects(:execute)
+              .with(Clever::SCHOOLS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
+              .returns(schools_response)
       end
 
       it 'authenticates and returns classrooms with properly mapped course numbers' do
@@ -600,16 +605,37 @@ RSpec.describe Clever::Client do
         expect(first_classroom.term_name).to eq('term name')
         expect(first_classroom.term_start_date).to eq('2019-08-21')
         expect(first_classroom.term_end_date).to eq('2020-01-10')
+        expect(first_classroom.school_name).to eq(school_1['data']['name'])
         expect(first_classroom.provider).to eq('clever')
 
         expect(second_classroom.class).to eq(Clever::Types::Classroom)
         expect(second_classroom.uid).to eq(section_2['data']['id'])
         expect(second_classroom.name).to eq(section_2['data']['name'])
         expect(second_classroom.period).to eq(section_2['data']['period'])
+        expect(second_classroom.school_name).to eq(school_2['data']['name'])
         expect(second_classroom.course_number).to eq(nil)
         expect(second_classroom.grades).to eq([section_2['data']['grade']])
         expect(second_classroom.subjects).to eq([])
         expect(second_classroom.provider).to eq('clever')
+      end
+    end
+
+    describe 'schools' do
+      before do
+        client.connection.expects(:execute)
+              .with(Clever::SCHOOLS_ENDPOINT, :get, limit: Clever::PAGE_LIMIT)
+              .returns(schools_response)
+      end
+
+      it 'authenticates and returns classrooms with properly mapped course numbers' do
+        response = client.schools
+        expect(client.app_token).to eq(app_token)
+
+        first_school = response[0]
+
+        expect(first_school.uid).to eq(school_1['data']['id'])
+        expect(first_school.name).to eq(school_1['data']['name'])
+        expect(first_school.class).to eq(Clever::Types::School)
       end
     end
 
