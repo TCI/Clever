@@ -3,7 +3,7 @@
 module Clever
   class Client
     attr_accessor :app_id, :app_token, :sync_id, :logger, :redirect_uri,
-                  :vendor_key, :vendor_secret, :username_source, :staff_username_source
+                  :vendor_key, :vendor_secret, :username_source, :staff_username_source, :sentry_client
 
     attr_reader :api_url, :tokens_endpoint
 

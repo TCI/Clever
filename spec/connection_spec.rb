@@ -11,6 +11,7 @@ RSpec.describe Clever::Connection do
   let(:auth_header) { 'Basic dmVuZG9yX2tleTp2ZW5kb3Jfc2VjcmV0' }
   let(:user_agent) { "Faraday v#{Faraday::VERSION}" }
   let(:app_id) { '5800e1c5e16c4230146fce0' }
+  let(:sentry_client) { nil }
   let(:status) { 200 }
 
   let(:client) do
@@ -19,6 +20,7 @@ RSpec.describe Clever::Connection do
       config.vendor_key    = vendor_key
       config.vendor_secret = vendor_secret
       config.logger        = logger
+      config.sentry_client = sentry_client
     end
   end
 
@@ -66,6 +68,33 @@ RSpec.describe Clever::Connection do
           expect(response).to be_a(Clever::Response)
           expect(response.success?).to be(false)
           expect(response.raw_body).to eq(mock_response.body)
+        end
+      end
+
+      context '502 response with a sentry_client' do
+        let(:status) { 502 }
+        let(:body) { 'Bad Gateway' }
+
+        before { connection.stubs(:raw_request).returns(mock_response) }
+
+        it 'does not log to sentry and returns a failed response object' do
+          response = connection.execute('/teachers', :get, limit: Clever::PAGE_LIMIT)
+          expect(response).to be_a(Clever::Response)
+          expect(response.success?).to be(false)
+          expect(response.raw_body).to eq(mock_response.body)
+        end
+
+        context 'with a sentry_client configured' do
+          let(:sentry_client) { stub(capture_message: stub) }
+
+          it 'logs to sentry and returns a failed response object' do
+            sentry_client.expects(:capture_message)
+
+            response = connection.execute('/teachers', :get, limit: Clever::PAGE_LIMIT)
+            expect(response).to be_a(Clever::Response)
+            expect(response.success?).to be(false)
+            expect(response.raw_body).to eq(mock_response.body)
+          end
         end
       end
     end
