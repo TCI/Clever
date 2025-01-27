@@ -71,7 +71,7 @@ RSpec.describe Clever::Connection do
         end
       end
 
-      context '502 response with a sentry_client' do
+      context '502 response' do
         let(:status) { 502 }
         let(:body) { 'Bad Gateway' }
 
