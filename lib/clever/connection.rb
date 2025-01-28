@@ -10,7 +10,21 @@ module Clever
     end
 
     def execute(path, method = :get, params = nil, body = nil)
-      Response.new(raw_request(path, method, params, body))
+      response = Response.new(raw_request(path, method, params, body))
+
+      if [502, 504].include?(response.status)
+        log_to_sentry(
+          'client.app_id' => @client.app_id,
+          'connection.body' => body,
+          'connection.method' => method,
+          'connection.params' => params,
+          'connection.path' => path,
+          'response.http_status' => response.status,
+          'response.raw_body' => response.raw_body
+        )
+      end
+
+      response
     end
 
     def set_token(token)
@@ -47,6 +61,12 @@ module Clever
         request.headers['Accept-Header'] = 'application/json'
         request.body                     = body
       end
+    end
+
+    def log_to_sentry(payload)
+      return unless @client.sentry_client
+
+      @client.sentry_client.capture_message('Exception in Clever::Connection', **{ extra: payload })
     end
   end
 end
