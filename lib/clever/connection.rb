@@ -22,7 +22,7 @@ module Clever
           'response.http_status' => response.status,
           'response.raw_body' => response.raw_body
         )
-        raise GatewayTimeoutError if response.status == 504
+        raise GatewayTimeoutError if response.timed_out?
       end
 
       response
