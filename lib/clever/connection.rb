@@ -22,6 +22,7 @@ module Clever
           'response.http_status' => response.status,
           'response.raw_body' => response.raw_body
         )
+        raise if response.status == 504
       end
 
       response
