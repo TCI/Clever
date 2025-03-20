@@ -99,13 +99,15 @@ RSpec.describe Clever::Connection do
       end
 
       context '504 response' do
+        subject { connection.execute('/teachers', :get, limit: Clever::PAGE_LIMIT) }
+
         let(:status) { 504 }
-        let(:body) { 'Bad Gateway' }
+        let(:body) { 'Gateway Timeout' }
 
         before { connection.stubs(:raw_request).returns(mock_response) }
 
         it 'raises an error' do
-          expect { connection.execute('/teachers', :get, limit: Clever::PAGE_LIMIT) }.to raise_error
+          expect { subject }.to raise_error(Clever::Connection::GatewayTimeoutError)
         end
 
         context 'with a sentry_client configured' do
@@ -114,7 +116,7 @@ RSpec.describe Clever::Connection do
           it 'logs to sentry and raises' do
             sentry_client.expects(:capture_message)
 
-            expect { connection.execute('/teachers', :get, limit: Clever::PAGE_LIMIT) }.to raise_error
+            expect { subject }.to raise_error(Clever::Connection::GatewayTimeoutError)
           end
         end
       end
