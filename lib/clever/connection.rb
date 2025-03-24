@@ -22,6 +22,7 @@ module Clever
           'response.http_status' => response.status,
           'response.raw_body' => response.raw_body
         )
+        raise GatewayTimeoutError if response.timed_out?
       end
 
       response
@@ -68,5 +69,7 @@ module Clever
 
       @client.sentry_client.capture_message('Exception in Clever::Connection', **{ extra: payload })
     end
+
+    class GatewayTimeoutError < StandardError; end
   end
 end

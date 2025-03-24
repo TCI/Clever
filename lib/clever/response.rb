@@ -23,6 +23,10 @@ module Clever
       @status == 200
     end
 
+    def timed_out?
+      @status == 504
+    end
+
     private
 
     def uri(kind)
