@@ -8,14 +8,22 @@ RSpec.shared_context 'api responses' do
   let(:status) { 200 }
   let(:username_source) { nil }
   let(:staff_username_source) { 'district_username' }
+  let(:student_username_search_for) { nil }
+  let(:student_username_replace_with) { nil }
+  let(:staffer_username_search_for) { nil }
+  let(:staffer_username_replace_with) { nil }
 
   let(:client) do
     Clever::Client.configure do |config|
-      config.app_id                = app_id
-      config.vendor_key            = vendor_key
-      config.vendor_secret         = vendor_secret
-      config.username_source       = username_source
-      config.staff_username_source = staff_username_source
+      config.app_id                         = app_id
+      config.vendor_key                     = vendor_key
+      config.vendor_secret                  = vendor_secret
+      config.username_source                = username_source
+      config.staff_username_source          = staff_username_source
+      config.student_username_search_for    = student_username_search_for
+      config.student_username_replace_with  = student_username_replace_with
+      config.staffer_username_search_for    = staffer_username_search_for
+      config.staffer_username_replace_with  = staffer_username_replace_with
     end
   end
 

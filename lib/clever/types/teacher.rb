@@ -23,9 +23,16 @@ module Clever
       end
 
       def username(client = nil)
-        username_source = client&.staff_username_source
+        return @username if defined?(@username)
 
-        @username ||= presence(username_from(username_source))
+        username_source = client&.staff_username_source
+        username = presence(username_from(username_source))
+
+        if client&.staffer_username_search_for
+          username = username&.gsub(client.staffer_username_search_for, client.staffer_username_replace_with || '')
+        end
+
+        @username = username
       end
 
       def to_h
